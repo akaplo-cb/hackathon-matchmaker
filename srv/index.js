@@ -3,7 +3,9 @@ const readline = require('readline');
 const {google} = require('googleapis');
 const { authorize } = require('./auth');
 const express = require('express');
+const cors = require('cors');
 const app = express();
+app.use(cors());
 
 app.get('/', (req, res, next) => {
     loadCredentials((auth) => {
@@ -12,7 +14,7 @@ app.get('/', (req, res, next) => {
     })
 });
 
-app.listen(3000, () => console.log('300000000yay'));
+app.listen(8001, () => console.log('300000000yay'));
 
 const { COLUMNS, ARRAY_CELLS, LOOKING_FOR_TEAM_COLUMNS, MAKE_TEAM_COLUMNS, REASON_COLUMN_OPTIONS, COMMON_COLUMNS } = require('./constants');
 

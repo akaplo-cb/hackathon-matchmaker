@@ -9,6 +9,7 @@
   "author": "akaplo",
   "license": "MIT",
   "dependencies": {
+    "cors": "^2.8.4",
     "express": "^4.16.3",
     "googleapis": "^27.0.0"
   }
