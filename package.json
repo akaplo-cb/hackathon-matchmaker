@@ -1,0 +1,14 @@
+{
+  "name": "hackathon-matchmaker",
+  "version": "0.1.0",
+  "description": "Enabling teams to find people, and vice versa, for Carbon Black hackathons",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "akaplo",
+  "license": "MIT",
+  "dependencies": {
+    "googleapis": "^27.0.0"
+  }
+}
