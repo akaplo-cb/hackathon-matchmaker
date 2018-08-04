@@ -14,7 +14,7 @@ app.get('/', (req, res, next) => {
     })
 });
 
-app.listen(8001, () => console.log('300000000yay'));
+app.listen(80, () => console.log('300000000yay'));
 
 const { COLUMNS, ARRAY_CELLS, LOOKING_FOR_TEAM_COLUMNS, MAKE_TEAM_COLUMNS, REASON_COLUMN_OPTIONS, COMMON_COLUMNS } = require('./constants');
 
