@@ -2,6 +2,17 @@ const fs = require('fs');
 const readline = require('readline');
 const {google} = require('googleapis');
 const { authorize } = require('./auth');
+const express = require('express');
+const app = express();
+
+app.get('/', (req, res, next) => {
+    loadCredentials((auth) => {
+        console.log('hi');
+        listMajors(req, res, next, auth);
+    })
+});
+
+app.listen(3000, () => console.log('300000000yay'));
 
 const { COLUMNS, ARRAY_CELLS, LOOKING_FOR_TEAM_COLUMNS, MAKE_TEAM_COLUMNS, REASON_COLUMN_OPTIONS, COMMON_COLUMNS } = require('./constants');
 
@@ -11,13 +22,14 @@ const rl = readline.createInterface({
 });
 
 
-
-// Load client secrets from a local file.
-fs.readFile('credentials.json', (err, content) => {
-    if (err) return console.log('Error loading client secret file:', err);
-    // Authorize a client with credentials, then call the Google Sheets API.
-    authorize(JSON.parse(content), listMajors);
-});
+function loadCredentials(cb) {
+    // Load client secrets from a local file.
+    fs.readFile('credentials.json', (err, content) => {
+        if (err) return console.log('Error loading client secret file:', err);
+        // Authorize a client with credentials, then call the Google Sheets API.
+        authorize(JSON.parse(content), (auth) => cb(auth));
+    });
+}
 
 
 /**
@@ -25,14 +37,14 @@ fs.readFile('credentials.json', (err, content) => {
  * @see https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
  * @param {google.auth.OAuth2} auth The authenticated Google OAuth client.
  */
-function listMajors(auth) {
+function listMajors(req, res, next, auth) {
     const sheets = google.sheets({version: 'v4', auth});
     sheets.spreadsheets.values.get({
         spreadsheetId: '1PMpthgimWcj0ARuuybY1JNx35frFuiQCq_O0OLM4Uh8',
         range: 'A2:AA',
-    }, (err, res) => {
-        if (err) return console.log('The API returned an error: ' + err);
-        const rows = res.data.values;
+    }, (err, sheetsResponse) => {
+        if (err) return next('The API returned an error: ' + err);
+        const rows = sheetsResponse.data.values;
         if (rows.length) {
             const responses = {
                 makingTeam: [],
@@ -47,21 +59,19 @@ function listMajors(auth) {
                 } else if (row[COMMON_COLUMNS.whatBringsYouBy] === REASON_COLUMN_OPTIONS.lookingForTeam) {
                     responses.lookingForTeam.push(userResponse);
                 } else {
-                    console.error('unexpected value for what brings you by')
+                    next('unexpected value for what brings you by')
                 }
             });
-            rl.question('Enter your Carbon Black email address! ', ans => {
-                rl.close();
-                const userObj = responses.lookingForTeam.find(u => u.email === 'akaplowitz@carbonblack.com');
-                if (!userObj) {
-                    console.error('unable to find a signup under that email address.')
-                } else {
-                    const statsForUser = calculateSimilaritiesForSingleUser(userObj, responses.makingTeam);
-                    prettyPrintMatchesForUser(statsForUser);
-                }
-            })
+            const userObj = responses.lookingForTeam.find(u => u.email === 'akaplowitz@carbonblack.com');
+            if (!userObj) {
+                next('unable to find a signup under that email address.')
+            } else {
+                const statsForUser = calculateSimilaritiesForSingleUser(userObj, responses.makingTeam);
+                // prettyPrintMatchesForUser(statsForUser);
+                res.send(statsForUser);
+            }
         } else {
-            console.log('No data found.');
+            next('No data found.');
         }
     });
 }
