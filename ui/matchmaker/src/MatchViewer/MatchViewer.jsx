@@ -10,6 +10,7 @@ class MatchViewer extends Component {
             return res.json()
         }).then(j => this.setState({ res: j }));
     }
+
     render() {
         const { res } = this.state;
 

@@ -11,6 +11,8 @@ import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
 
 
 const styles = theme => ({
@@ -33,9 +35,21 @@ const styles = theme => ({
 
 class Login extends Component {
     state = { email: undefined };
+
+    validateAll(email, type) {
+        return this.validateEmail(email) && this.validateType(type);
+    }
+    validateEmail(email) {
+        return email && email.toLowerCase().trim().endsWith('@carbonblack.com')
+    }
+
+    validateType(type) {
+        return !!type
+    }
+
     render() {
         const { classes, onLoginClicked } = this.props;
-        const { email } = this.state;
+        const { email, error } = this.state;
         return(
             <Paper className={ classes.root }>
                 <Typography variant="headline" component="h3">
@@ -47,12 +61,13 @@ class Login extends Component {
                 <TextField
                     required
                     id="required"
+                    error={ !this.validateEmail(email) && error }
                     label="Email"
                     placeholder={ 'Enter Cb email' }
                     margin="normal"
                     onChange={ (e) => this.setState({ email: e.target.value })}
                 />
-                <FormControl component="fieldset" className={classes.formControl}>
+                <FormControl error={ !this.state.type && error } component="fieldset" className={classes.formControl} required>
                     <FormLabel component="legend">Are you a team or an individual?</FormLabel>
                     <RadioGroup
                         className={classes.group}
@@ -73,9 +88,30 @@ class Login extends Component {
                         />
                     </RadioGroup>
                 </FormControl>
-                <Button variant="contained" color="primary" onClick={ () => onLoginClicked(this.state) }>
+                <Button variant="contained" color="primary" onClick={ () => {
+                    if (this.validateAll(email, this.state.type)) {
+                        onLoginClicked(this.state);
+                    } else if (!this.validateEmail(email)){
+                        this.setState({ error: true, showSnackbar: true, errorString: 'Email must end in @carbonblack.com' });
+                    } else if (!this.validateType(this.state.type)) {
+                        this.setState({ error: true, showSnackbar: true, errorString: 'Must specify team or individual' });
+                    }
+                } }>
                     See Matches
                 </Button>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    open={ this.state.showSnackbar }
+                    autoHideDuration={6000}
+                    onClose={() => this.setState({ showSnackbar: false })}
+                    ContentProps={{
+                        'aria-describedby': 'message-id',
+                    }}
+                    message={<span id="message-id">{ this.state.errorString }</span>}
+                />
             </Paper>
         );
     }

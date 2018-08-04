@@ -10,11 +10,11 @@ class App extends Component {
     return (
       <div className="App">
           {
-              !email &&
+              (!email || !type) &&
                   <Login onLoginClicked={ (user) => this.setState({ email: user.email, type: user.type }) }/>
           }
           {
-              !!email &&
+              !!email && !!type &&
                   <MatchViewer email={ email } type={ type } />
           }
       </div>
