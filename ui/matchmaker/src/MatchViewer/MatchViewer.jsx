@@ -6,7 +6,7 @@ class MatchViewer extends Component {
     componentWillMount(pp, ps, ss) {
         const { email, type } = this.props;
         console.log('didupdate??');
-        fetch('http://localhost:8001/').then(res => {
+        fetch(`http://localhost:8001/${type}?email=${email}`).then(res => {
             return res.json()
         }).then(j => this.setState({ res: j }));
     }
