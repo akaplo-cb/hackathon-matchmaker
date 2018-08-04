@@ -34,7 +34,7 @@ const styles = theme => ({
 });
 
 class Login extends Component {
-    state = { email: undefined };
+    state = { email: '', type: 'individual' };
 
     validateAll(email, type) {
         return this.validateEmail(email) && this.validateType(type);
@@ -75,15 +75,16 @@ class Login extends Component {
                         onChange={ e => this.setState({ type: e.target.value }) }
                     >
                         <FormControlLabel
-                            value="team"
-                            control={<Radio color="primary" />}
-                            label="Team"
-                            labelPlacement="start"
-                        />
-                        <FormControlLabel
                             value="individual"
                             control={<Radio color="primary" />}
                             label="Individual"
+                            labelPlacement="start"
+                        />
+                        <FormControlLabel
+                            disabled
+                            value="team"
+                            control={<Radio color="primary" />}
+                            label="Team (coming soon)"
                             labelPlacement="start"
                         />
                     </RadioGroup>
