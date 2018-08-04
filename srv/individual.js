@@ -33,7 +33,8 @@ function individualHandler(req, res, next, auth) {
             });
             const userObj = responses.lookingForTeam.find(u => u.email === req.query.email);
             if (!userObj) {
-                next('unable to find a signup under that email address.')
+                res.status(400)
+                res.send({ message: 'No hackathon registration exists for that email.' })
             } else {
                 const statsForUser = calculateSimilaritiesForSingleUser(userObj, responses.makingTeam);
                 // prettyPrintMatchesForUser(statsForUser);

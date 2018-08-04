@@ -48,10 +48,13 @@ class Login extends Component {
     }
 
     render() {
-        const { classes, onLoginClicked } = this.props;
+        const { classes, onLoginClicked, incomingMessage } = this.props;
         const { email, error } = this.state;
         return(
             <Paper className={ classes.root }>
+                <Typography component="i">
+                    { incomingMessage }
+                </Typography>
                 <Typography variant="headline" component="h3">
                     Welcome to the Cb Hackathon Matchmaker
                 </Typography>

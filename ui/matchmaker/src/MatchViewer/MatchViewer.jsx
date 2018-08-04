@@ -7,6 +7,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
+import Login from '../Login/Login';
 
 const muiStyle = theme => ({
     root: {
@@ -26,10 +27,13 @@ class MatchViewer extends Component {
     state = { res: undefined };
     componentWillMount(pp, ps, ss) {
         const { email, type } = this.props;
-        console.log('didupdate??');
         fetch(`http://localhost:8001/${type}?email=${email}`).then(res => {
-            return res.json()
-        }).then(j => this.setState({ res: j }));
+            if (res.ok) {
+                return res.json()
+            }
+            throw res.json()
+        }).then(j => this.setState({ res: j }))
+            .catch(e => e.then(e => this.setState({ errorMessage: e.message })));
     }
 
     render() {
@@ -93,7 +97,12 @@ class MatchViewer extends Component {
 
             );
         }
-        return null;
+        if (this.state.errorMessage) {
+            return (
+                <Login incomingMessage={ this.state.errorMessage }></Login>
+            )
+        }
+        return null
     }
 }
 
