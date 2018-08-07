@@ -2,9 +2,11 @@ const {google} = require('googleapis');
 const { COLUMNS, ARRAY_CELLS, LOOKING_FOR_TEAM_COLUMNS, MAKE_TEAM_COLUMNS, REASON_COLUMN_OPTIONS, COMMON_COLUMNS } = require('./constants');
 
 /**
- * Prints the names and majors of students in a sample spreadsheet:
- * @see https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
- * @param {google.auth.OAuth2} auth The authenticated Google OAuth client.
+ *
+ * @param req
+ * @param res
+ * @param next
+ * @param auth
  */
 function individualHandler(req, res, next, auth) {
     const sheets = google.sheets({version: 'v4', auth});
@@ -70,17 +72,17 @@ function calculateSimilaritiesForSingleUser(user, teams) {
     let statsByTeam = { email: user.email, name: user.name, teams: [] };
     for(let team of teams) {
         let countOfPoints = 0;
-        let statsForTeam = { name: team.nameYourTeam, members: team.listYourTeamMembers, languages: [], environments: [], description: team.shortProjectDescription1 };
-        if (user.hardware2 === team.hardware1) {
+        let statsForTeam = { name: team.teamName, members: team.teamMembers, languages: [], environments: [], description: team.teamProjectDesc };
+        if (user.individualDoesHardware === team.teamDoesHardware) {
             statsForTeam.hardware = 1;
             countOfPoints++;
         }
-        if (user.projectCategory2 === team.projectCategory1) {
+        if (user.individualProjectCategory === team.teamProjectCategory) {
             statsForTeam.projectCategory = 1;
             countOfPoints++;
         }
-        countOfPoints += user.programmingLanguages2.filter(lang => team.programmingLanguages1.includes(lang)).map(includedLang => statsForTeam.languages.push(includedLang)).length;
-        countOfPoints += user.environments2.filter(env => team.environments1.includes(env)).map(env => statsForTeam.environments.push(env)).length;
+        countOfPoints += user.individualLangs.filter(lang => team.teamLangs.includes(lang)).map(includedLang => statsForTeam.languages.push(includedLang)).length;
+        countOfPoints += user.individualEnvs.filter(env => team.teamEnvs.includes(env)).map(env => statsForTeam.environments.push(env)).length;
         statsForTeam.points = countOfPoints;
         statsByTeam.teams.push(statsForTeam)
     }

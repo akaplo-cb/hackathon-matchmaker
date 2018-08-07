@@ -34,7 +34,7 @@ const styles = theme => ({
 });
 
 class Login extends Component {
-    state = { email: '', type: 'individual' };
+    state = { email: 'cbrewer@carbonblack.com', type: 'individual' };
 
     validateAll(email, type) {
         return this.validateEmail(email) && this.validateType(type);
@@ -66,7 +66,7 @@ class Login extends Component {
                     id="required"
                     error={ !this.validateEmail(email) && error }
                     label="Email"
-                    defaultValue={'akaplowitz@carbonblack.com'}
+                    defaultValue={'cbrewer@carbonblack.com'}
                     placeholder={ 'Enter Cb email' }
                     margin="normal"
                     onChange={ (e) => this.setState({ email: e.target.value })}
@@ -85,7 +85,6 @@ class Login extends Component {
                             labelPlacement="start"
                         />
                         <FormControlLabel
-                            disabled
                             value="team"
                             control={<Radio color="primary" />}
                             label="Team (coming soon)"

@@ -4,6 +4,7 @@ const {google} = require('googleapis');
 const { authorize } = require('./auth');
 const express = require('express');
 const { individualHandler } = require('./individual');
+const { teamHandler } = require('./team');
 const cors = require('cors');
 const app = express();
 app.use(cors());
@@ -16,9 +17,10 @@ app.get('/individual', (req, res, next) => {
 });
 
 app.get('/team', (req, res, next) => {
+    console.log('team');
     loadCredentials((auth) => {
         console.log('hi');
-        individualHandler(req, res, next, auth);
+        teamHandler(req, res, next, auth);
     })
 });
 
