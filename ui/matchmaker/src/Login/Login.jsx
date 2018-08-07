@@ -66,6 +66,7 @@ class Login extends Component {
                     id="required"
                     error={ !this.validateEmail(email) && error }
                     label="Email"
+                    defaultValue={'akaplowitz@carbonblack.com'}
                     placeholder={ 'Enter Cb email' }
                     margin="normal"
                     onChange={ (e) => this.setState({ email: e.target.value })}
