@@ -8,19 +8,13 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import Login from '../Login/Login';
+import Individual from './Individual';
+import Team from './Team';
+
 
 const muiStyle = theme => ({
     root: {
         marginTop: theme.spacing.unit * 3,
-        overflowX: 'auto',
-        height: '30rem'
-    },
-    card: {
-        maxWidth: 345,
-    },
-    media: {
-        height: 0,
-        paddingTop: '56.25%', // 16:9
     },
 });
 class MatchViewer extends Component {
@@ -38,60 +32,17 @@ class MatchViewer extends Component {
 
     render() {
         const { res } = this.state;
-        const { classes } = this.props;
+        const { classes, type } = this.props;
         if (res) {
-            const bestMatch = res.teams[0].name;
-            // if they didn't come sorted:
-            /**
-              teams.sort((a, b) => {
-                   if (a.points > b.points) {
-                       return -1;
-                   } else if (b.points > a.points) {
-                       return 1;
-                   }
-                   return 0;
-              })
-            */
-            const headers = Object.keys(res.teams[0])
-            console.log(headers);
             return (
                 <Paper className={classes.root}>
                     {
-                        res.teams.map(team => {
-                            console.log(team)
-                            return (
-                                <Card className={classes.card}>
-                                    <CardContent>
-                                        { bestMatch === team.name &&
-                                            <i>Best Match For You</i>
-                                        }
-                                        <Typography gutterBottom variant="headline" component="h2">
-                                            { team.name }
-                                        </Typography>
-                                        <Typography component="i">
-                                            { team.members.join(', ') }
-                                        </Typography>
-                                        <Typography component="i">
-                                            { team.languages.join(', ')}
-                                        </Typography>
-                                        <Typography component="i">
-                                            { team.environments.join(', ')}
-                                        </Typography>
-                                        <Typography component="p">
-                                            { team.description}
-                                        </Typography>
-                                        <Typography component="p">
-                                            { team.points}
-                                        </Typography>
-                                    </CardContent>
-                                    <CardActions>
-                                        <Button href='https://carbonblack.slack.com' size="small" color="primary">
-                                            Learn more
-                                        </Button>
-                                    </CardActions>
-                                </Card>
-                            );
-                        })
+                        type === 'individual' &&
+                            <Individual res={ res }/>
+                    }
+                    {
+                        type === 'team' &&
+                            <Team res={ res }/>
                     }
                 </Paper>
 
