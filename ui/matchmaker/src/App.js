@@ -4,18 +4,18 @@ import Login from "./Login/Login";
 import MatchViewer from './MatchViewer/MatchViewer';
 
 class App extends Component {
-    state = { email: undefined, type: undefined };
+    state = { email: undefined, type: undefined, err: null };
   render() {
-      const { email, type } = this.state;
+      const { email, type, err } = this.state;
     return (
       <div className="App">
           {
-              (!email || !type) &&
-                  <Login onLoginClicked={ (user) => this.setState({ email: user.email, type: user.type }) }/>
+              (!email || !type || !!err) &&
+                  <Login incomingMessage={err} onLoginClicked={ (user) => this.setState({ email: user.email, type: user.type }) }/>
           }
           {
-              !!email && !!type &&
-                  <MatchViewer email={ email } type={ type } />
+              !!email && !!type && !err &&
+                  <MatchViewer email={ email } type={ type } onError={ (err) => this.setState({ err: err }) } />
           }
       </div>
     );

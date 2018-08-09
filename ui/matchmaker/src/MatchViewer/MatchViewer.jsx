@@ -10,6 +10,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Login from '../Login/Login';
 import Individual from './Individual';
 import Team from './Team';
+import axios from 'axios';
 
 
 const muiStyle = theme => ({
@@ -20,14 +21,18 @@ const muiStyle = theme => ({
 class MatchViewer extends Component {
     state = { res: undefined };
     componentWillMount(pp, ps, ss) {
-        const { email, type } = this.props;
-        fetch(`http://localhost:8001/${type}?email=${email}`).then(res => {
-            if (res.ok) {
-                return res.json()
-            }
-            throw res.json()
-        }).then(j => this.setState({ res: j }))
-            .catch(e => e.then(e => this.setState({ errorMessage: e.message })));
+        const { email, type, onError } = this.props;
+        axios.get(`http://localhost:8001/${type}?email=${email}`)
+            .then(res => {
+                this.setState({ res: res });
+            })
+            .catch(e => {
+                if (e.response.data.message) {
+                    onError(e.response.data.message);
+                } else {
+                    onError('An unknown error occurred');
+                }
+            });
     }
 
     render() {
@@ -47,11 +52,6 @@ class MatchViewer extends Component {
                 </Paper>
 
             );
-        }
-        if (this.state.errorMessage) {
-            return (
-                <Login incomingMessage={ this.state.errorMessage }></Login>
-            )
         }
         return null
     }

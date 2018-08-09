@@ -31,6 +31,9 @@ const styles = theme => ({
     group: {
         margin: `${theme.spacing.unit}px 0`,
     },
+    red: {
+        color: 'red'
+    }
 });
 
 class Login extends Component {
@@ -52,7 +55,7 @@ class Login extends Component {
         const { email, error } = this.state;
         return(
             <Paper className={ classes.root }>
-                <Typography component="i">
+                <Typography className={ classes.red } component="i">
                     { incomingMessage }
                 </Typography>
                 <Typography variant="headline" component="h3">
