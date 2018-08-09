@@ -24,7 +24,7 @@ class MatchViewer extends Component {
         const { email, type, onError } = this.props;
         axios.get(`http://localhost:8001/${type}?email=${email}`)
             .then(res => {
-                this.setState({ res: res });
+                this.setState({ res: res.data });
             })
             .catch(e => {
                 if (e.response.data.message) {

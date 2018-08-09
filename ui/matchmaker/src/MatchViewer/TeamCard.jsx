@@ -9,11 +9,9 @@ import { withStyles } from '@material-ui/core/styles';
 const muiStyle = theme => ({
     root: {
         marginTop: theme.spacing.unit * 3,
-        overflowX: 'auto',
-        height: '30rem'
     },
     card: {
-        maxWidth: 345,
+        marginBottom: '1rem'
     },
     media: {
         height: 0,
