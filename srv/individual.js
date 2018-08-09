@@ -72,7 +72,11 @@ function calculateSimilaritiesForSingleUser(user, teams) {
     let statsByTeam = { email: user.email, name: user.name, teams: [] };
     for(let team of teams) {
         let countOfPoints = 0;
-        let statsForTeam = { name: team.teamName, members: team.teamMembers, languages: [], environments: [], description: team.teamProjectDesc };
+        let statsForTeam = {
+            ...team,
+            languages: [],
+            environments: []
+        };
         if (user.individualDoesHardware === team.teamDoesHardware) {
             statsForTeam.hardware = 1;
             countOfPoints++;
